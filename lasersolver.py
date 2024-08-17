@@ -1,3 +1,4 @@
+import copy
 import itertools
 
 
@@ -87,10 +88,21 @@ class pole:
 
     def splnitelne(self, n):
         for kombinace in itertools.combinations(self.prazdna_pole, n):
-            self.inicializujcile()
-            self.vypustlasery()
-            if min(self.prustrelycilu.values()) > 0:
-                return 1
+            planeksezrcadly = copy.deepcopy(self)
+            planeksezrcadly.data = copy.deepcopy(planeksezrcadly.data)
+            for vyber in vsechnyvybery(kombinace):
+                for zrcadlo in kombinace:
+                    if zrcadlo in vyber:
+                        planeksezrcadly.data[zrcadlo[0]][zrcadlo[1]] = '/'
+                    else:
+                        planeksezrcadly.data[zrcadlo[0]][zrcadlo[1]] = '\\'
+                planeksezrcadly.inicializujcile()
+                planeksezrcadly.vypustlasery()
+
+                if min(planeksezrcadly.prustrelycilu.values()) > 0:
+                    planeksezrcadly.vytiskni()
+                    return 1
+                planeksezrcadly.data = copy.deepcopy(self.data)
         return 0
 
 with open("vstup.txt", 'r') as vstupy:
@@ -104,6 +116,12 @@ with open("vstup.txt", 'r') as vstupy:
 zadany_objekt = pole(len(zadani), len(zadani[0]), zadani)
 zadany_objekt.vytiskni()
 
+def vsechnyvybery(seznam):
+    vysledek = []
+    for i in range(len(seznam) + 1):
+        for kombinace in itertools.combinations(seznam, i):
+            vysledek.append(kombinace)
+    return vysledek
 def vyhledej_k(planek):
     n = 0
     while n < 10000000:
@@ -111,7 +129,7 @@ def vyhledej_k(planek):
         if planek.splnitelne(n):
             return n
     raise Exception('nepovedlo se na 100000000')
-
+print(vsechnyvybery([1,2,6]))
 print(vyhledej_k(zadany_objekt))
 
 
