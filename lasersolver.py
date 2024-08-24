@@ -1,9 +1,10 @@
 import copy
 import itertools
-
+import sys
 
 
 class pole:
+    # Základní datová struktura uchovávající zadání problému, její třídy jsou nástroje na jeho řešení
     def __init__(self, sirka : int, vyska : int, data):
         self.posunybezzrcadla = 0
         self.vyska = vyska
@@ -15,16 +16,19 @@ class pole:
         print(self.pouzitazrcadla)
         self.prazdna_pole = [(i, j) for i in range(sirka) for j in range(vyska) if self.data[i][j] == 'x']
     def vytiskni(self):
+        #pomocná funkce, vizuálně vykreslí zadání
         for line in self.data:
             print(' '.join(map(str, line)))
 
     def v_tabulce(self, x, y):
+        #Vrátí ano, pokud je zadaný bod v tabulce
         if x in range(self.sirka) and y in range(self.vyska):
             return True
         else:
             return False
 
     def volne_pole(self, x, y):
+        #Vrátí ano, pokud je zadaný bod prázdný (není na něm zeď)
         volne = ['>', '<', '^', 'v', 'o', 'x', '/', '\\']
         if self.data[x][y] in volne or self.data[x][y].isnumeric():
             return True
@@ -33,12 +37,13 @@ class pole:
 
 
     def posouvejlaser(self, x, y, smer):
+        #Simuluje vystřelený laser, rekurzivně se zavolá na to pole a směr, kam se laser posune
         self.posunybezzrcadla += 1
         if self.posunybezzrcadla > self.vyska * self.sirka:
-            return 1
+            return 1 # Pokud se laser do nekonečna hýbe mezi dvěma zdmi, tímto je zastaven
         aktualni_pole = [x, y]
         cilove_pole = [x + smer[0], y + smer[1]]
-        if self.data[x][y].isnumeric():
+        if self.data[x][y].isnumeric(): #zda jsme zasáhli cíl
             self.prustrelycilu[(x, y)] += 1
         if self.data[aktualni_pole[0]][aktualni_pole[1]] == '/' and self.pouzitazrcadla[(aktualni_pole[0], aktualni_pole[1])] == 0:
             self.posunybezzrcadla = 0
@@ -56,10 +61,11 @@ class pole:
         elif self.volne_pole(cilove_pole[0], cilove_pole[1]):
             self.posouvejlaser( cilove_pole[0], cilove_pole[1], smer)
         else:
-            raise Exception('nevalidni pole')
+            raise Exception('nevalidni pole') #Vždy by měla nastat jedna z předchozích možností.
 
 
     def vypustlaser(self, x, y):
+        #Vystřelí laser z některého z polí, na kterých se v zadání laser nachází
         self.pouzitazrcadla = {(i,j) : 0 for i in range(self.sirka) for j in range(self.vyska)}
         self.posunybezzrcadla = 0
         if self.data[x][y] == '^':
@@ -73,20 +79,21 @@ class pole:
         else:
             raise  Exception('zde nelze vypustit laser')
 
-    def inicializujcile(self):
+    def inicializujcile(self): #Nastaví počítadla průstřelů cílů na 0 (předchozí pokusy s nimi mohly pracovat)
         for i in range(self.sirka):
             for j in range(self.vyska):
                 if self.data[i][j].isnumeric():
-                    #self.cile[(i, j)] = self.data[i][j]
                     self.prustrelycilu[(i, j)] = 0
 
     def vypustlasery(self):
+        # Vystřelí laser z každého pole k tomu určenému
         for i in range(self.sirka):
             for j in range(self.vyska):
                 if self.data[i][j] in ['^', '>', 'v', '<']:
                     self.vypustlaser(i, j)
 
     def splnitelne(self, n):
+        #Testuje, zda je úloha splnitelná na n zrcadel
         for kombinace in itertools.combinations(self.prazdna_pole, n):
             planeksezrcadly = copy.deepcopy(self)
             planeksezrcadly.data = copy.deepcopy(planeksezrcadly.data)
@@ -105,31 +112,33 @@ class pole:
                 planeksezrcadly.data = copy.deepcopy(self.data)
         return 0
 
-with open("vstup.txt", 'r') as vstupy:
-    radky = vstupy.readlines()
-    zadani = []
-    for line in radky:
-        docasna = line.strip().split()
-        zadani.append(docasna)
-    vstupy.close()
 
+
+
+
+
+zadani = []
+for line in sys.stdin: # Přečte zadání úlohy stdin (tabulku m krát n)
+    docasna = line.strip().split()
+    zadani.append(docasna)
 zadany_objekt = pole(len(zadani), len(zadani[0]), zadani)
-zadany_objekt.vytiskni()
+zadany_objekt.vytiskni() #Ukáže zadání pro přehlednost
 
 def vsechnyvybery(seznam):
+    #Pomocná funkce, která vrátí všech 2^n kombinací ze seznamu o n prvcích
     vysledek = []
     for i in range(len(seznam) + 1):
         for kombinace in itertools.combinations(seznam, i):
             vysledek.append(kombinace)
     return vysledek
 def vyhledej_k(planek):
+    # Hlavní funkce, vyhledá minimální počet zrcadel postupným zkoušením
     n = 0
-    while n < 10000000:
+    while n < planek.sirka * planek.vyska:
         n += 1
         if planek.splnitelne(n):
             return n
     raise Exception('nepovedlo se na 100000000')
-print(vsechnyvybery([1,2,6]))
 print(vyhledej_k(zadany_objekt))
 
 
