@@ -61,6 +61,9 @@ class pole:
             self.posouvejlaser(x, y, [-smer[i] for i in range(2)])
         elif self.volne_pole(cilove_pole[0], cilove_pole[1]):
             self.posouvejlaser(cilove_pole[0], cilove_pole[1], smer)
+        elif self.data[cilove_pole[0]][cilove_pole[1]] == 'z':
+            novysmer = [-smer[0], -smer[1]]
+            self.posouvejlaser(cilove_pole[0], cilove_pole[1], novysmer)
         else:
             raise Exception('nevalidni pole')  # Vždy by měla nastat jedna z předchozích možností.
 
@@ -115,15 +118,6 @@ class pole:
 
 
 
-
-zadani = []
-for line in sys.stdin:  # Přečte zadání úlohy stdin (tabulku m krát n)
-    docasna = line.strip().split()
-    zadani.append(docasna)
-zadany_objekt = pole(len(zadani), len(zadani[0]), zadani)
-zadany_objekt.vytiskni()  # Ukáže zadání pro přehlednost
-
-
 def vsechnyvybery(seznam):
     # Pomocná funkce, která vrátí všech 2^n kombinací ze seznamu o n prvcích
     vysledek = []
@@ -145,4 +139,12 @@ def vyhledej_k(planek):
 
 
 #samotný program
-print(vyhledej_k(zadany_objekt))
+
+if __name__ == '__main__':
+    zadani = []
+    for line in sys.stdin:  # Přečte zadání úlohy stdin (tabulku m krát n)
+        docasna = line.strip().split()
+        zadani.append(docasna)
+    zadany_objekt = pole(len(zadani), len(zadani[0]), zadani)
+    zadany_objekt.vytiskni()  # Ukáže zadání pro přehlednost
+    print(vyhledej_k(zadany_objekt))

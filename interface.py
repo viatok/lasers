@@ -2,9 +2,12 @@ import copy
 import random
 import subprocess
 import sys
+import lasersolver
+
+
+
 konverzace = True
 def umistuj(objekt, pocet, tabulka):
-    print(tabulka)
     count = 0
     umisteno = 0
     while umisteno < pocet:
@@ -31,17 +34,17 @@ def generate(sirka, vyska, cile, lasery, zdi):
                 tabulka[x][y] = orientace[zvolenaorientace]
     return tabulka
 while konverzace:
-    pozadavek = input('Chcete vstup vygenerovat, nebo zadat souborem? Zadejte g pro generování, s pro soubor.')
+    pozadavek = input('Chcete vstup vygenerovat, nebo zadat souborem? Zadejte g pro generování, s pro soubor, k pro konec.')
     if pozadavek == 'g':
         parametry = list(map(int, input('Zadejte jako čísla oddělená mezerami: Šířku, výšku, počet cílů, počet laserů, počet zdí').split()))
         vygenerovane = generate(parametry[0], parametry[1], parametry[2], parametry[3], parametry[4])
         if not type(vygenerovane) == int:
-            if __name__ == '__main__':
-                with open('generovane.txt', 'w') as f:
-                    f.truncate(0)
-                    for line in vygenerovane:
-                        f.write(' '.join(line) + '\n')
-                    f.close()
-                subprocess.run(['python', 'lasersolver.py'], input=open('generovane.txt', 'r'))
-
-
+            generovanyobjekt = lasersolver.pole(parametry[1], parametry[0], vygenerovane)
+            lasersolver.vyhledej_k(generovanyobjekt)
+            with open('generovane.txt', 'w') as f:
+                f.truncate(0)
+                for line in vygenerovane:
+                    f.write(' '.join(line) + '\n')
+                f.close()
+    if pozadavek == 'k':
+        konverzace = False
