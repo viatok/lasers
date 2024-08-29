@@ -18,8 +18,7 @@ def umistuj(objekt, pocet, tabulka):
             umisteno += 1
         count += 1
         if count > (len(tabulka)**2)*len(tabulka[0])**2:
-            print('nelze vygenerovat zadání požadovaných parametrů')
-            return 0
+            raise Exception('Nepodařilo se vygenerovat zadání') # Selhalo příliš mnoho pokusů na umístění
     return tabulka
 def generate(sirka, vyska, cile, lasery, zdi):
     tabulka = [['.' for i in range(sirka)] for j in range(vyska)]
@@ -38,6 +37,8 @@ while konverzace:
     if pozadavek == 'g':
         parametry = list(map(int, input('Zadejte jako čísla oddělená mezerami: Šířku, výšku, počet cílů, počet laserů, počet zdí').split()))
         vygenerovane = generate(parametry[0], parametry[1], parametry[2], parametry[3], parametry[4])
+        if parametry[2] == 0:
+            raise Exception('Počet laserů musí být kladný')
         if not type(vygenerovane) == int:
             generovanyobjekt = lasersolver.pole(parametry[1], parametry[0], vygenerovane)
             lasersolver.vyhledej_k(generovanyobjekt)

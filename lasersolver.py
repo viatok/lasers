@@ -136,6 +136,9 @@ def vyhledej_k(planek):
         n += 1
         if planek.splnitelne(n):
             return n
+    planek.vypustlasery()
+    if min(planek.prustrelycilu.values()) > 0:
+        print('Řešení je neumístit žádné zrcadlo.')
     print('řešení neexistuje')
 
 
