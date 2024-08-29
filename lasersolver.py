@@ -13,7 +13,7 @@ class pole:
         self.cile = {}
         self.prustrelycilu = {}
         self.pouzitazrcadla = {(i, j): 0 for i in range(sirka) for j in range(vyska)}
-        self.prazdna_pole = [(i, j) for i in range(sirka) for j in range(vyska) if self.data[i][j] == 'x']
+        self.prazdna_pole = [(i, j) for i in range(sirka) for j in range(vyska) if self.data[i][j] == '.']
 
     def vytiskni(self):
         # pomocná funkce, vizuálně vykreslí zadání
@@ -29,7 +29,7 @@ class pole:
 
     def volne_pole(self, x, y):
         # Vrátí ano, pokud je zadaný bod prázdný (není na něm zeď)
-        volne = ['>', '<', '^', 'v', 'o', 'x', '/', '\\']
+        volne = ['>', '<', '^', 'v', '.', '/', '\\']
         if self.data[x][y] in volne or self.data[x][y].isnumeric():
             return True
         else:
@@ -128,13 +128,15 @@ def vsechnyvybery(seznam):
 
 
 def vyhledej_k(planek):
+    planek.vytiskni()
     # Hlavní funkce, vyhledá minimální počet zrcadel postupným zkoušením
     n = 0
     while n < planek.sirka * planek.vyska:
+        print(n)
         n += 1
         if planek.splnitelne(n):
             return n
-    raise Exception('nepovedlo se na 100000000')
+    print('řešení neexistuje')
 
 
 

@@ -3,7 +3,7 @@
 Jako zápočtový program jsem vypracoval program řešící jistou logickou úlohu. Umí úlohu vyřešit, a lze s ním generovat zadání těchto úloh i s řešeními. Všechny dokumenty jsou uloženy na githubovém repozitáři. Jeho obsahem jsou tyto soubory:
 
 - lasersolver.py dostane na stdin zadání jedné instance této úlohy, a vypíše do konzole její řešení.
-- interface.py je program, se kterým uživatel primárně komunikuje a spouští ho, tento program umí generovat zadání či číst zadání ze souborů, a zavolá si na ně program solver, čímž tedy nepřímo vypíše řešení.
+- interface.py je program, se kterým uživatel primárně komunikuje a spouští ho, tento program umí generovat zadání či číst zadání ze souborů, a zavolá si na ně program lasersolver, čímž tedy nepřímo vypíše řešení.
 - zbylé textové soubory jsou sady vstupů, které se dají spustit programem interface.py
 - a samozřejmě tato dokumentace
 
@@ -39,3 +39,18 @@ Funkce splnitelne si získá seznam všech možných umístění zrcadel a pro k
 
 Pro otestování, zda je dané rozmístění zrcadel řešením, se spustí funkce vypustlasery, která vystřelí ze všech laserů, načež se zkontroluje, zda byly zasaženy všechny cíle.
 
+
+# Obsluha programu
+
+Pro generování zadání spusťte interface.py. Nyní můžete generovat kolik jen úloh chcete. Zadejte 'g' jako generovat, následně zadejte na jeden řádek pět přirozených čísel, oddělených mezerou. V tomto pořadí čísla reprezentují: Výšku tabulky, šířku tabulky, počet cílů, počet laserů, počet zdí v tabulce. Zřejmě je potřeba, aby součet umisťovaných objektů nepřevyšoval počet polí v tabulce.
+
+Vygenerované zadání se vytiskne, vyřeší, a uloží do souboru generovane.txt. Pokud si přejete zadání uschovat, můžete ho přejmenovat, jinak bude při příštím generování přepsán.
+
+Druhou možností je předat hotové zadání programu lasersolver.py, který ho jen vyřeší. Program ho přijímá na **stdin**, pokud chcete číst ze souborů, je nutné program zavolat rovnou s daným souborem jako vstupem (z konzole).
+
+## Změny vůči původnímu zadání
+
+Některé detaily jsem vůči původnímu zadání pozměnil a to konkrétně:
+
+- Lasery mohou být umístěny i uprostřed tabulky. Umožňuje to zajímavější zadání
+- Program nezkouší umístění zrcadel v žádném konkrétním pořadí (Vždy stejně musí projít všechna umístění daného počtu zrcadel, aby si byl jistý, že to na dané k splnit nelze, než se posune na větší k)
