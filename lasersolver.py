@@ -10,7 +10,6 @@ class pole:
         self.vyska = vyska
         self.sirka = sirka
         self.data = data
-        self.cile = {}
         self.prustrelycilu = {}
         self.pouzitazrcadla = {(i, j): 0 for i in range(sirka) for j in range(vyska)}
         self.prazdna_pole = [(i, j) for i in range(sirka) for j in range(vyska) if self.data[i][j] == '.']
@@ -65,7 +64,7 @@ class pole:
             novysmer = [-smer[0], -smer[1]]
             self.posouvejlaser(cilove_pole[0], cilove_pole[1], novysmer)
         else:
-            raise Exception('nevalidni pole')  # Vždy by měla nastat jedna z předchozích možností.
+            raise Exception('nevalidní zadání')  # Vždy by měla nastat jedna z předchozích možností.
 
     def vypustlaser(self, x, y):
         # Vystřelí laser z některého z polí, na kterých se v zadání laser nachází
@@ -132,14 +131,19 @@ def vyhledej_k(planek):
     # Hlavní funkce, vyhledá minimální počet zrcadel postupným zkoušením
     n = 0
     while n < planek.sirka * planek.vyska:
-        print(n)
-        n += 1
         if planek.splnitelne(n):
             return n
-    planek.vypustlasery()
+        n += 1
+    planek.inicializujcile()
+    planek.vypustlasery() #Pokud nejsou volná pole na umisťování zrcadel, toto zaručí, že se i tak vystřelí z laserů
+    if planek.prustrelycilu.values() == []:
+        raise Exception('Tento plánek neobsahuje žádné cíle')
     if min(planek.prustrelycilu.values()) > 0:
         print('Řešení je neumístit žádné zrcadlo.')
-    print('řešení neexistuje')
+        return 0
+    else:
+        print('řešení neexistuje')
+        return -1
 
 
 
@@ -151,5 +155,4 @@ if __name__ == '__main__':
         docasna = line.strip().split()
         zadani.append(docasna)
     zadany_objekt = pole(len(zadani), len(zadani[0]), zadani)
-    zadany_objekt.vytiskni()  # Ukáže zadání pro přehlednost
-    print(vyhledej_k(zadany_objekt))
+    vyhledej_k(zadany_objekt)
