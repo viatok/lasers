@@ -145,14 +145,20 @@ def vyhledej_k(planek):
         print('řešení neexistuje')
         return -1
 
-
-
-#samotný program
-
-if __name__ == '__main__':
+def parser():
     zadani = []
     for line in sys.stdin:  # Přečte zadání úlohy stdin (tabulku m krát n)
         docasna = line.strip().split()
         zadani.append(docasna)
     zadany_objekt = pole(len(zadani), len(zadani[0]), zadani)
-    vyhledej_k(zadany_objekt)
+    return zadany_objekt
+
+def printer(objekt):
+    objekt.vytiskni()
+
+#samotný program
+
+if __name__ == '__main__':
+    zadani = parser()
+    reseni = vyhledej_k(zadani)
+    print(reseni)

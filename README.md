@@ -44,7 +44,43 @@ Program **interface.py** umí generovat libovolný počet zadání. Jak již byl
 
 Poté co je zadání vygenerováno se na něj spustí funkce vyhledej_k, importovaná z lasersolver. Poté se zadání zapíše do generovane.txt (je možné jej znovu spustit z tohoto souboru přímo pomocí lasersolver), a může se generovat znovu.
 
+# Low lvl dokumentace
 
+### Třída pole
+
+Základní objekt, se kterým program operuje, je v něm obsažena instance zadání. Musí být zadán s inicializačními parametry vyska, sirka, data.
+
+#### Vytiskni
+
+Základní funkce, která pěkně vykreslí tabulku do konzole.
+
+#### v_tabulce
+
+Vrátí ano, pokud se zadané pole nachází v tabulce.
+
+#### volne_pole
+
+Vrátí ano, pokud je zadaný bod prázdný
+
+#### posouvejlaser
+
+Simuluje vystřelený laser, rekurzivně volá sama sebe.
+
+#### vypustlaser
+
+Vystřelí laser z některého z polí, na kterých je zavoláno
+
+#### splnitelne
+
+Vrátí ano, pokud je úloha splnitelná na n zrcadel. Testuje postupným zvyšováním n.
+
+#### Vyhledej_k
+
+Vyhledá minimální počet zrcadel, řešení vytiskne na konzoli, optimum vrátí. Volí si funkci splnitelne.
+
+#### Parser
+
+Funkce, která načte vstup a vrátí výsledný objekt
 # Obsluha programu
 
 Pro generování zadání spusťte interface.py. Nyní můžete generovat kolik jen úloh chcete. Zadejte 'g' jako generovat, následně zadejte na jeden řádek pět přirozených čísel, oddělených mezerou. V tomto pořadí čísla reprezentují: Výšku tabulky, šířku tabulky, počet cílů, počet laserů, počet zdí v tabulce. Zřejmě je potřeba, aby součet umisťovaných objektů nepřevyšoval počet polí v tabulce. Bude vygenerováno rovnoměrně náhodné zadání s požadovanými počty objektů.
